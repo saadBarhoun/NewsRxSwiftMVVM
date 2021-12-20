@@ -19,4 +19,5 @@ struct Article: Decodable {
     let updated: String
     let abstract: String
     let published_date: String
+    let section: String
 }

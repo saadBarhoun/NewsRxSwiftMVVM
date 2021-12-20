@@ -15,6 +15,9 @@ class NewsDetailsViewController: UIViewController {
    
     @IBOutlet weak var imageV: UIImageView!
     @IBOutlet weak var abstractLabel: UILabel!
+    @IBOutlet weak var updatedLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var sectionLabel: UILabel!
     
     var detailsVM = DetaislListViewModel()
     let disposeBag = DisposeBag()
@@ -43,19 +46,31 @@ class NewsDetailsViewController: UIViewController {
                 DispatchQueue.main.async {
                     let detailsVM = self.detailsVM.articleAtIndex(self.index)
 
+                    detailsVM?.title.asDriver(onErrorJustReturn: "")
+                        .drive(self.titleLabel.rx.text)
+                        .disposed(by: self.disposeBag)
+//
                     detailsVM?.abstract.asDriver(onErrorJustReturn: "hii")
                         .drive(self.abstractLabel.rx.text)
                         .disposed(by: self.disposeBag)
-                    
+//
                     detailsVM?.media.subscribe(onNext:{ imageUrl in
                         self.imageV.load(url: imageUrl)
                        // self.alert.dismiss(animated: true, completion: nil)
                     }).disposed(by: self.disposeBag)
-                    
+//
                     detailsVM?.url.subscribe(onNext:{ url in
                         self.urlString = url
                     }).disposed(by: self.disposeBag)
-                    //self.alert.dismiss(animated: true, completion: nil)
+//                    //self.alert.dismiss(animated: true, completion: nil)
+                    detailsVM?.updated.asDriver(onErrorJustReturn: "")
+                        .drive(self.updatedLabel.rx.text)
+                        .disposed(by: self.disposeBag)
+//
+                    detailsVM?.section.asDriver(onErrorJustReturn: "")
+                        .drive(self.sectionLabel.rx.text)
+                        .disposed(by: self.disposeBag)
+                    
                 }
                 
             }).disposed(by: disposeBag)
